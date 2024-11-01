@@ -33,26 +33,38 @@ let userInfo = {
     },
   ],
 };
-console.log(userInfo.userList[1].username);
+console.log(userInfo.userList[1].account);
 
-let inputName = `박찬호`;
+let inputId = `park9876`;
 let inputPwd = `ppp9999`;
 
 while (true) {
-  inputName = prompt(`이름을 입력하세요.`);
-  let userNum;
+  inputId = prompt(`아이디을 입력하세요.`);
+  let userNum = null;
   // 입력받은 이름가 객체안에 있는 지 확인하여 
   // 있다면 해당객체 번호 저장
   for (let i = 0; i < userInfo.userList.length; i++) {
-    if (inputName === userInfo.userList[i].username) {
+    if (inputId === userInfo.userList[i].account) {
       userNum = i;
+      break;
     }
   }
-  // 유저 검색이 안됬을경우
-  if (!userNum && userNum !== 0) {
+
+
+  // for..of 문
+  // 여기서 let user은 객체로 저장됨
+  // for (let user of userInfo.userList) {
+  //   if (inputId === user.account) {
+  //     userNum = userInfo.userList.indexOf(user);
+  //   }
+  // }
+
+  // 유저 검색이 안됐을경우
+  if (userNum === null) {
     alert(`존재하지 않는 회원입니다.`);
     continue;
   }
+  
   while (true) {
     inputPwd = prompt(`비밀번호를 입력하세요.`);
     if (inputPwd === userInfo.userList[userNum].password) {
@@ -66,7 +78,7 @@ while (true) {
     }
   }
   if (inputPwd !== null) {
-    alert(`로그인 성공`);
+    alert(`${userInfo.userList[userNum].username}님 로그인 성공`);
     break;
   }
 }
