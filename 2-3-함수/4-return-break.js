@@ -58,11 +58,30 @@ function operate(n1, n2) {
   return resultList;
 }
 
+// 이런식으로 매서드 형식으로 모듈화 해줄수있다.
+let operateMethod = {
+  addResult: function (n1, n2) {
+    return n1 + n2;
+  },
+  subResult: function (n1, n2) {
+    return n1 - n2;
+  },
+  multiResult: function (n1, n2) {
+    return n1 * n2;
+  },
+  divResult: function (n1, n2) {
+    return n1 / n2;
+  },
+};
+
 let result = operate(10, 5);
+let resultMethod = operateMethod.addResult(1,2);
 console.log(`덧셈 : ${result[0]}`);
 console.log(`뺄셈 : ${result[1]}`);
 console.log(`곱셈 : ${result[2]}`);
 console.log(`나눗셈 : ${result[3]}`);
+console.log(`매서드 덧셈 : ${resultMathod}`);
+
 
 console.log(`=====================================`);
 console.log(`객체로 저장`);
@@ -82,12 +101,11 @@ console.log(`객체로 저장`);
 //   return resultObj;
 // }
 
-
 // 함수 간소화~
 function operateObj(n1, n2) {
   return {
     // 다른 함수를 가져다쓸 수 있음 => 리팩토링
-    addResult: add(n1,n2),
+    addResult: add(n1, n2),
     subResult: n1 - n2,
     multiResult: n1 * n2,
     divResult: n1 / n2,
@@ -99,4 +117,3 @@ console.log(`덧셈 : ${resultObj.addResult}`);
 console.log(`뺄셈 : ${resultObj.subResult}`);
 console.log(`곱셈 : ${resultObj.multiResult}`);
 console.log(`나눗셈 : ${resultObj.divResult}`);
-
