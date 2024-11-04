@@ -52,8 +52,9 @@ while (true) {
 
 
   // for..of 문
-  // 여기서 let user은 객체로 저장됨
-  // for (let user of userInfo.userList) {
+  // 여기서 const user은 객체로 저장됨 
+  // 객체를 사용할 땐  const를 사용해서 수정하는게 코드의 안정성을 높일 수있음
+  // for (const user of userInfo.userList) {
   //   if (inputId === user.account) {
   //     userNum = userInfo.userList.indexOf(user);
   //   }
