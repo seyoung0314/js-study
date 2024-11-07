@@ -177,7 +177,8 @@ for (const key in arr5) {
 }
 
 console.log(`#5`);
-console.log(arr5);
+// console.log(arr5);
+console.log(JSON.stringify(arr5,null,2));
 console.log(`========================================`);
 
 // 6. **각 거래자별로 그들이 진행한 거래의
@@ -190,6 +191,8 @@ const arr6 = traders.reduce((avgObj, tradeInfo) => {
     avgObj[tradeInfo.trader.name] += tradeInfo.value;
     count[tradeInfo.trader.name]++;
   } else {
+    // avgObjavgObj[tradeInfo.trader.name] = {sum :tradeInfo.value, count :1};
+    // 이런식으로 전개할수도 ~ 
     avgObj[tradeInfo.trader.name] = tradeInfo.value;
     count[tradeInfo.trader.name] = 1;
   }
@@ -199,13 +202,12 @@ const arr6 = traders.reduce((avgObj, tradeInfo) => {
 // console.log(count);
 
 // 평균을 내줌
-const avgObj = {};
 for (const key in arr6) {
-  avgObj[key] = arr6[key] / count[key];
+  arr6[key] = arr6[key] / count[key];
 }
 
 console.log(`#6`);
-console.log(avgObj);
+console.log(arr6);
 console.log(`========================================`);
 
 // 7. **2022년과 2023년 각각에서 가장 많은 거래를 한 거래자의
