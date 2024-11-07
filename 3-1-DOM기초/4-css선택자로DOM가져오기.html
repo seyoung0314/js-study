@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul>
+      <li class="fruit apple">사과</li>
+      <li class="fruit banana">바나나</li>
+      <li id="grp" class="fruit grape">포도</li>
+      <li class="fruit peach">복숭아</li>
+    </ul>
+    <script>
+      // 포도 li태그를 가져오기
+      // const $grape = document.querySelector(''.grape');
+      // const $grape = document.querySelector('ul li:nth-child(3)'');
+      // const $grape = document.querySelector('.banana + li');
+      // const $grape = document.getElementById('grp');
+      const $grape = document.querySelector("#grp");
+      $grape.style.color = "violet";
+
+      // querySelector는 해당 선택자에 일치하는 첫 요소하나만 반환
+      const x = document.querySelector(".fruit");
+      const y = document.querySelectorAll(".fruit");
+      console.log(x);
+      console.log(`-------`);
+      
+      console.log(y);
+      for(let i=0; i<y.length; i++){
+        li.style.fontStyle ='italic';
+      }
+      x.style.fontStyle = "italic";
+      y[0].style.fontSize = "red";
+    </script>
+  </body>
+</html>

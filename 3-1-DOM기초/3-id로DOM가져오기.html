@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <ul>
+    <li id="apple">사과</li>
+    <li id="banana">바나나</li>
+    <li id="grape">포도</li>
+    <li id="peach">복숭아</li>
+  </ul>
+  <script>
+    const $banana = document.getElementById('banana');
+    const $peach = document.getElementById('peach');
+
+    console.log($banana.textContent);
+
+    $banana.textContent = 'banana';
+    
+    // 이렇게 넣으면 인라인 스타일로 들어감
+    $peach.style.fontSize = '2rem';
+    $peach.style.fontWeight = '700';
+    $peach.style['font-weight'] = '700';
+    $peach.style.backgroundColor = 'pink';
+
+    const $grape = document.getElementById('grape');
+    $grape.style.backgroundColor = 'violet';
+  </script>
+</body>
+</html>
