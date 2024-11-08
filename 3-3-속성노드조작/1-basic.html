@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <input type="email" id="account" value="abc@ads.com">
+
+  <script>
+    // 속성 노드 생성
+    const typeNode = {
+      name :'type',
+      value : 'email',
+    };
+    const idNode = {
+      name :'type',
+      value : 'email',
+    };
+    const valueNode = {
+      name :'type',
+      value : 'email',
+    };
+    // 요소 노드(태그 객체) 안에 속성 노드 값이 들어있음
+    // 속성 노드엔 idx, 속성키값 , 길이 이런식
+    const inputNode = {
+      tagName : 'input',
+      children : [],
+      attributes:{
+        0 : typeNode,
+        1:idNode,
+        type: typeNode,
+        id : idNode,
+      }
+    };
+
+    // input 가져오기
+    const $input = document.getElementById('account');
+    console.log($input.attributes.value.value);
+    
+    $input.attributes.value.value = 'go';
+  </script>
+</body>
+</html>

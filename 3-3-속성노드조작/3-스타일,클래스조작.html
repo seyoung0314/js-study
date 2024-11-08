@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .box {
+        width: 100px;
+        height: 100px;
+        background: orange;
+        font-size: 20px;
+        color: red;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .green {
+        color: greenyellow;
+        background: green;
+      }
+      .blue {
+        color: aqua;
+        background: blue;
+      }
+      .circle {
+        border-radius: 50%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box green" style="font-weight: 700">Hello</div>
+
+    <script>
+      const $box = document.querySelector(".box");
+      // 인라인 스타일이 변경되기 때문에 xx
+      // $box.style.background = 'red';
+
+      // 클래스 수정하기
+      // $box.className = 'box green circle';
+      $box.classList.add('circle','aaa');
+
+      // 클래스 제거하기
+      $box.classList.remove('aaa');
+
+      // 클래스 교체하기 (old, new)
+      $box.classList.replace('green','blue');
+
+      // 클래스 존재유무확인
+      console.log($box.classList.contains('circle')); //boolean
+      console.log($box.classList.contains('rapid')); //boolean
+      
+      // toggle : 해당 클래스가 존재하면 삭제,
+      //          존재하지 않으면 추가
+      // 좋아요 하트 눌렀을때 색변하는거 ..
+      $box.classList.toggle('circle'); // 있는 상태라 삭제
+      $box.classList.toggle('circle'); // 없는 상태라 추가
+    </script>
+  </body>
+</html>
