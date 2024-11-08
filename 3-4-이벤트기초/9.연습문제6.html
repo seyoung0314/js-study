@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <style>
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background-color: #f5f5f5;
+        flex-direction: column;
+      }
+
+      #slider {
+        display: flex;
+        align-items: center;
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+        height: 40%;
+      }
+
+      #slider img {
+        max-width: 400px;
+        max-height: 300px;
+        display: block;
+        object-fit: cover;
+      }
+
+      button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        display: flex; 
+      justify-content: center; 
+      align-items: center;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      button:focus {
+        outline: none;
+      }
+      #album {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 20%;
+      }
+
+      #album .img-wrap img {
+        width: 150px;
+        overflow: hidden;
+      }
+      #play{
+        width: 4rem;
+        height: 3rem;
+      }
+      
+    </style>
+  </head>
+
+  <body>
+    <div id="slider">
+      <button id="prev">이전</button>
+      <img
+        id="image"
+        src="https://blog.kakaocdn.net/dn/dN4uhe/btr8xWDwbrK/5YjBrelhtJwU2BAcLtEVoK/img.jpg"
+        style="width: 400px; height: auto"
+      />
+      <button id="next">다음</button>
+    </div>
+    <div id="album">
+      <div class="img-wrap">
+        <img
+          class="album"
+          id="image1"
+          src="https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D"
+        />
+      </div>
+      <div class="img-wrap">
+        <img
+          class="album"
+          id="image2"
+          src="https://blog.kakaocdn.net/dn/dN4uhe/btr8xWDwbrK/5YjBrelhtJwU2BAcLtEVoK/img.jpg"
+        />
+      </div>
+      <div class="img-wrap">
+        <img
+          class="album"
+          id="image3"
+          src="https://www.sisajournal.com/news/photo/202108/222572_131065_5150.jpg"
+        />
+      </div>
+    </div>
+    <div>
+      <button id="play" data-state="off">
+▶
+    </button>
+  </div>
+
+    <script>
+      // 이미지 경로를 저장할 배열
+      // 산리오,네이버,건물,고양이
+      const images = [
+        "https://blog.kakaocdn.net/dn/dN4uhe/btr8xWDwbrK/5YjBrelhtJwU2BAcLtEVoK/img.jpg",
+        "https://www.sisajournal.com/news/photo/202108/222572_131065_5150.jpg",
+        "https://images.unsplash.com/photo-1477959858617-67f85cf4f1df?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxleHBsb3JlLWZlZWR8MXx8fGVufDB8fHx8fA%3D%3D",
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRGjg38_EEd06nGwdXXmYgYqKxU2e_U_kjXeA&s",
+      ];
+
+      const $image = document.getElementById("image");
+      const $prev = document.getElementById("prev");
+      const $next = document.getElementById("next");
+      const $prevImage = document.getElementById("image1");
+      const $currImage = document.getElementById("image2");
+      const $nextImage = document.getElementById("image3");
+
+      // 배열을 원형으로 쓰기 위한 함수
+      function indexFlow(length, idx) {
+        let preidx = null;
+        let curridx = idx;
+        let nextidx = null;
+        // 인덱스가 0일때
+        if (curridx === 0) {
+          console.log(0);
+
+          preidx = length - 1;
+          nextidx = curridx + 1;
+          // 인덱스가 마지막일 때
+        } else if (curridx === length - 1) {
+          console.log(`끝`);
+          preidx = curridx - 1;
+          nextidx = 0;
+        } else {
+          preidx = curridx - 1;
+          nextidx = curridx + 1;
+        }
+        return [preidx, curridx, nextidx];
+      }
+
+      function changeImageHandler() {
+        const btnId = this.id;
+        let initialImageIdx = images.indexOf($image.src);
+        let prevAlbumIdx = indexFlow(4, initialImageIdx)[0];
+        let currAlbumIdx = indexFlow(4, initialImageIdx)[1];
+        let nextAlbumIdx = indexFlow(4, initialImageIdx)[2];
+
+        if (btnId === "prev" || btnId === "prevImage") {
+          $image.setAttribute("src", images[prevAlbumIdx]);
+          $prevImage.setAttribute("src", images[indexFlow(4, prevAlbumIdx)[0]]);
+          $currImage.setAttribute("src", images[indexFlow(4, prevAlbumIdx)[1]]);
+          $nextImage.setAttribute("src", images[indexFlow(4, prevAlbumIdx)[2]]);
+        } else if (btnId === "next" || btnId === "nextImage") {
+          $image.setAttribute("src", images[nextAlbumIdx]);
+          $prevImage.setAttribute("src", images[indexFlow(4, nextAlbumIdx)[0]]);
+          $currImage.setAttribute("src", images[indexFlow(4, nextAlbumIdx)[1]]);
+          $nextImage.setAttribute("src", images[indexFlow(4, nextAlbumIdx)[2]]);
+        }
+      }
+
+      $prev.addEventListener("click", changeImageHandler);
+      $next.addEventListener("click", changeImageHandler);
+      $prevImage.addEventListener("click", changeImageHandler);
+      $currImage.addEventListener("click", changeImageHandler);
+      $nextImage.addEventListener("click", changeImageHandler);
+
+      const $playbtn = document.getElementById("play");
+      let intervalState;
+
+      $playbtn.addEventListener("click", () => {
+        $playBtnState = $playbtn.getAttribute("data-state");
+
+        if ($playBtnState === "off") {
+          $playbtn.setAttribute("data-state", "on");
+          $playbtn.textContent = "■";
+          
+          intervalState = setInterval(() => {
+            $next.click();
+          }, 1000);
+        } else {
+          $playbtn.setAttribute("data-state", "off");
+          $playbtn.textContent = "▶";
+          clearInterval(intervalState);
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="btn">버튼</button>
+
+    <script>
+      const $btn = document.getElementById("btn");
+
+      //이벤트 핸들러
+      const sayHellowHandler = () => alert(`안녕!`);
+
+      // $btn.onclick = sayHellowHandler;
+
+      // 이벤트를 따로따로 관리하기 편함
+      $btn.addEventListener("click", sayHellowHandler);
+      $btn.addEventListener("click", () => ($btn.style.background = "red"));
+    
+      // 이벤트 제거 ( 무기명함수는 불가능)
+      $btn.removeEventListener('click',sayHellowHandler);
+    </script>
+  </body>
+</html>

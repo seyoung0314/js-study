@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .box {
+        width: 100px;
+        height: 100px;
+        background: orange;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box" id="box-item" title="안녕"></div>
+
+    <script>
+      const $box = document.querySelector('.box');
+
+      //속성값 참조
+      const title = $box.getAttribute('title');
+      console.log(title);
+
+      //속성값 변경 setAttribute(속성값,속성내용)
+      $box.setAttribute('id','vanila-box');
+      
+      //속성값 추가 (없는 속성이름을 주면됨)
+      $box.setAttribute('style','border-radius : 50%');
+
+      //속성값 제거 (속성값)
+      $box.removeAttribute('style');
+
+      //속성값 유무확인
+      console.log($box.hasAttribute('id')); // boolean타입 반환
+      
+    </script>
+  </body>
+</html>

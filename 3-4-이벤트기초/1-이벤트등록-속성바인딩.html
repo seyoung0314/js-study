@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        display: flex;
+      }
+      .box {
+        width: 100px;
+        height: 100px;
+        background: orange;
+        margin: 20px;
+      }
+      .green {
+        background: yellowgreen;
+        font-size: 25px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .red {
+        background: red;
+      }
+      .opacity{
+        opacity: 0.5;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box" onmouseover="makeTransparent()" onclick="boxClickHandler()"></div>
+    <div class="box green" onclick="makeTextHandler()"></div>
+    <div class="box red" onclick="growHandler()"></div>
+
+    <script>
+      //이벤트 바인딩 : 이벤트가 발생했을 떄 해야할 동작을 태그에 연결
+      //이벤트 핸들러 : 이벤트가 발생했을 떄 해야할 동작을 함수로 정의
+
+      function boxClickHandler() {
+        alert(`오렌지 박스를 클릭`);
+      }
+      function growHandler() {
+        const $redbox = document.querySelector(".red");
+        $redbox.style.width = "200px";
+      }
+      const makeTextHandler = function () {
+        const $greenbox = document.querySelector(".green");
+        if ($greenbox.textContent){
+          $greenbox.textContent = "";
+        }else{
+          $greenbox.textContent = "200px";
+        }
+      };
+      const makeTransparent = ()=>{
+        const $orange = document.querySelector('.box:first-child');
+        $orange.classList.toggle('opacity');
+      }
+    </script>
+  </body>
+</html>
