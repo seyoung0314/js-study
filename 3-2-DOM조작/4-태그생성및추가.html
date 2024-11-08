@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul id="hobbies">
+      <li>수영</li>
+    </ul>
+
+    <script>
+      // 원하는 태그를 생성해서 원하는 부모의 자식으로 추가하기
+      function appendNewTag($parentName, tagName = "div", options = {}) {
+        const $newTag = document.createElement(tagName);
+        if (options.text) $newTag.textContent = options.text;
+
+        $parentName.append($newTag);
+      }
+
+      const $hobbies = document.getElementById("hobbies");
+      appendNewTag($hobbies, "li", { text: 'aa' });
+
+      const hobbyList = ["1", "2", "3"];
+      hobbyList.forEach((hobby) =>
+        appendNewTag($hobbies, "li", { text: hobby })
+      );
+
+      // 태그 생성
+      const $newLi = document.createElement("li");
+      const $newLi2 = document.createElement("li");
+      const $newLi3 = document.createElement("li");
+
+      console.log($newLi);
+
+      // 텍스트를 추가
+      $newLi.textContent = "헬스1";
+      $newLi2.textContent = "요가2";
+      $newLi3.textContent = "태권도3";
+
+      // ul 끝에 추가
+      $hobbies.append($newLi);
+
+      // ul 맨 앞에 추가
+      $hobbies.prepend($newLi2);
+
+      // before, after는 자식이 주체(=>형제를 추가)
+      $newLi2.before($newLi3);
+    </script>
+  </body>
+</html>

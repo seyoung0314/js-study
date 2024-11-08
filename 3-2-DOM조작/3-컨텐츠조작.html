@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      span {
+        color: red;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="greet">Hello 
+      <span class="highright">World!</span>
+    </div>
+
+    <ul id="foods">
+      <li class="food">떡볶이</li>
+      <li class="food">고구마</li>
+      <li class="food">햄버거</li>
+    </ul>
+    <script>
+      const $greet = document.querySelector("#greet");
+      // trim() : 공백제거
+      console.log($greet.textContent.trim());
+
+      // 부모 태그에 텍스트를 변경하면 자식이 사라짐
+      // 태그를 추가하고 싶으면 innerHTML를 써야함
+
+      // textContent 는 내부요소의 텍스트값
+      // innerHTML 은 태그도 모두 텍스트로 판단
+      $greet.innerHTML = '<span class ="highright">안녕</span>하세요';
+      $greet.textContent = '<span class ="highright">안녕</span>하세요';
+    
+      const $foods = document.getElementById('foods');
+      $foods.children[1].textContent = '감자';
+
+      // 자식에 태그 추가
+      $foods.innerHTML += `<li class ="food">콜라</li>`;
+
+      // 자식 태그 전부 삭제
+      $foods.innerHTML = ``;
+
+    </script>
+  </body>
+</html>
