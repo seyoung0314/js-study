@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <p id="greeting">기존 인사말</p>
+  <div id="description">페이지 설명:</div>
+  <ul id="menu">
+    <li>기존 메뉴 1</li>
+    <li>기존 메뉴 2</li>
+  </ul>
+  <div id="info">기존 정보</div>
+  <div id="content">
+    <p id="oldItem">바꿀 요소</p>
+    <p id="deleteMe">삭제할 요소</p>
+  </div>
+  
+
+  <script>
+    //#1
+    const $greeting = document.getElementById('greeting');
+    $greeting.textContent = '안녕하세요!';
+
+    //#2
+    const $description = document.getElementById('description');
+    $description.innerHTML += ` <strong>이 페이지를 즐겨주세요!</strong>`;
+
+    //#3
+     const $menu = document.getElementById('menu');
+     const $newMenu = document.createElement('li');
+     $newMenu.textContent = '새로운 메뉴';
+     $menu.append($newMenu);
+
+    //#4
+    const $info = document.getElementById('info');
+    const $newInfo = document.createElement('div');
+    $info.before($newInfo.textContent='상단 정보');
+    $info.after($newInfo.textContent='하단 정보');
+
+    //#5
+    
+</script>
+</body>
+</html>
