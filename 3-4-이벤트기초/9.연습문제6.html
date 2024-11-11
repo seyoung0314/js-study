@@ -133,17 +133,17 @@
         let preidx = null;
         let curridx = idx;
         let nextidx = null;
+
         // 인덱스가 0일때
         if (curridx === 0) {
-          console.log(0);
-
           preidx = length - 1;
           nextidx = curridx + 1;
+
           // 인덱스가 마지막일 때
         } else if (curridx === length - 1) {
-          console.log(`끝`);
           preidx = curridx - 1;
           nextidx = 0;
+
         } else {
           preidx = curridx - 1;
           nextidx = curridx + 1;
@@ -151,26 +151,38 @@
         return [preidx, curridx, nextidx];
       }
 
+/*
+(index +1) % images.length  
+*/
+
+
       function changeImageHandler() {
         const btnId = this.id;
-        let initialImageIdx = images.indexOf($image.src);
-        let prevAlbumIdx = indexFlow(4, initialImageIdx)[0];
-        let currAlbumIdx = indexFlow(4, initialImageIdx)[1];
-        let nextAlbumIdx = indexFlow(4, initialImageIdx)[2];
+        console.log(this.id);
+        
+        const imageLenght = images.length;
+        const initialImageIdx = images.indexOf($image.src);
+        let prevAlbumIdx = indexFlow(imageLenght, initialImageIdx)[0];
+        let currAlbumIdx = indexFlow(imageLenght, initialImageIdx)[1];
+        let nextAlbumIdx = indexFlow(imageLenght, initialImageIdx)[2];
 
-        if (btnId === "prev" || btnId === "prevImage") {
+        // 이전 버튼이나 목록의 사진을 눌렀을 때
+        if (btnId === "prev" || btnId === "image1") {
           $image.setAttribute("src", images[prevAlbumIdx]);
-          $prevImage.setAttribute("src", images[indexFlow(4, prevAlbumIdx)[0]]);
-          $currImage.setAttribute("src", images[indexFlow(4, prevAlbumIdx)[1]]);
-          $nextImage.setAttribute("src", images[indexFlow(4, prevAlbumIdx)[2]]);
-        } else if (btnId === "next" || btnId === "nextImage") {
+          $prevImage.setAttribute("src", images[indexFlow(imageLenght, prevAlbumIdx)[0]]);
+          $currImage.setAttribute("src", images[indexFlow(imageLenght, prevAlbumIdx)[1]]);
+          $nextImage.setAttribute("src", images[indexFlow(imageLenght, prevAlbumIdx)[2]]);
+        
+          // 다음 버튼이나 목록의 사진을 눌렀을 떄
+        } else if (btnId === "next" || btnId === "image3") {
           $image.setAttribute("src", images[nextAlbumIdx]);
-          $prevImage.setAttribute("src", images[indexFlow(4, nextAlbumIdx)[0]]);
-          $currImage.setAttribute("src", images[indexFlow(4, nextAlbumIdx)[1]]);
-          $nextImage.setAttribute("src", images[indexFlow(4, nextAlbumIdx)[2]]);
+          $prevImage.setAttribute("src", images[indexFlow(imageLenght, nextAlbumIdx)[0]]);
+          $currImage.setAttribute("src", images[indexFlow(imageLenght, nextAlbumIdx)[1]]);
+          $nextImage.setAttribute("src", images[indexFlow(imageLenght, nextAlbumIdx)[2]]);
         }
       }
 
+      // 클릭 이벤트 리스너
       $prev.addEventListener("click", changeImageHandler);
       $next.addEventListener("click", changeImageHandler);
       $prevImage.addEventListener("click", changeImageHandler);
@@ -180,9 +192,11 @@
       const $playbtn = document.getElementById("play");
       let intervalState;
 
+      // 자동 플레이 이벤트 리스너
       $playbtn.addEventListener("click", () => {
         $playBtnState = $playbtn.getAttribute("data-state");
 
+        // 재생 버튼 클릭 시 1초에 한번씩 이미지 변경
         if ($playBtnState === "off") {
           $playbtn.setAttribute("data-state", "on");
           $playbtn.textContent = "■";

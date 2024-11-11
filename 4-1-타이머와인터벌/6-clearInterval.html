@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="start">시작</button>
+    <button id="stop">정지</button>
+    <p>시간 : <span id="timer">0</span>초</p>
+
+    <script>
+      $startBtn = document.getElementById("start");
+      $stopBtn = document.getElementById("stop");
+      $timer = document.getElementById("timer");
+
+      let intervalId = null;
+      $startBtn.addEventListener("click", (e) => {
+        //시작버튼을 누른 이후로 경과시간을 계산해서
+        // span 태그에 넣어줌
+
+        // 시작 시간 기록
+        const startTime = new Date();
+
+        if(intervalId){
+          intervalId =null;
+        }
+        
+        intervalId = setInterval(() => {
+          const now = new Date();
+
+          // 경과 시간
+          const elapsedTime = now - startTime; // 시간을 빼면 밀리초로 계산
+          $timer.textContent = Math.floor(elapsedTime / 1000); // 초 단위로 변환
+        }, 1000);
+      });
+
+      $stopBtn.addEventListener("click", () => {
+        // 인터벌 타이머 취소
+        clearInterval(intervalId);
+        intervalId = null;
+
+      });
+    </script>
+  </body>
+</html>
