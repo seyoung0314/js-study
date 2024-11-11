@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #fruits {
+        display: flex;
+        list-style: none;
+        padding: 20px;
+        border: 2px solid red;
+        flex-wrap: wrap;
+      }
+
+      #fruits li {
+        width: 100px;
+        cursor: pointer;
+        background: orange;
+        margin-right: 10px;
+      }
+
+      .active {
+        color: red;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="fruits">
+      <li id="apple" class="active">Apple</li>
+      <li id="banana">Banana</li>
+      <li id="grape">Grape</li>
+    </ul>
+
+    <div>선택된 과일: <em class="msg">Apple</em></div>
+
+    <label>
+      # 새로운 과일 추가하기:
+      <input type="text" class="text-box" />
+      <button id="add">추가</button>
+    </label>
+
+    <script>
+      const $fruits = document.getElementById("fruits");
+
+      // 과일 목록 클릭 이벤트 리스너
+      $fruits.addEventListener("click", (e) => {
+
+        //조건부로 li를 클릭 하지 않으면 함수 강제 종료
+        // matches('선택자') : 선택자와 일치하면 true
+        if(!e.target.matches('#fruits li')){
+          return;
+        }
+        // 어떤 태그를 클릭했는 지
+        console.log(e.target);
+
+        const $msg = document.querySelector(".msg");
+        $msg.textContent = e.target.textContent;
+
+        // 모든 li에서 active클래스 제거
+        [...$fruits.children].forEach(($li) => $li.classList.remove("active"));
+
+        // 클릭 된 태그에만 active 클래스 부여
+        e.target.classList.add("active");
+        
+      });
+
+      const $addBtn = document.getElementById("add");
+      const $input = document.querySelector(".text-box");
+
+      // 새로운 과일 추가 이벤트 리스너
+      $addBtn.addEventListener("click", (e) => {
+        //input에 입력한 과일이름 읽어오기
+        const newFruitsName = $input.value;
+        console.log(newFruitsName);
+
+        // li태그 생성
+        const $newLi = document.createElement("li");
+        $newLi.textContent = newFruitsName;
+        $newLi.setAttribute("id", newFruitsName.toLowerCase());
+        console.log($newLi);
+
+        // ul에 추가
+        $fruits.append($newLi);
+
+        // input박스 비우기
+        $input.value = "";
+      });
+
+      $input.addEventListener("keyup", (e) => {
+        if (e.key === 'Enter') {
+          $addBtn.click();
+        }
+      });
+    </script>
+  </body>
+</html>

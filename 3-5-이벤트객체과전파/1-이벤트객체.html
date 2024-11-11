@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <p>아무 곳이나 클릭하세요.</p>
+    <em class="msg"></em>
+    <hr />
+    <input type="text" name="" id="txt" />
+    <p class="show"></p>
+
+    <script>
+      //문서 전체에 이벤트
+      // 이벤트 시 받아오는 객체들은 보통 e,event로 표기해 사용
+      document.addEventListener("click", function (e) {
+        // console.log(e);
+        const $msg = document.querySelector(".msg");
+
+        // 쉬프트키를 눌렀을 때
+        if (e.shiftKey) {
+          $msg.textContent = `x : ${e.x}, y : ${e.y}`;
+        } else {
+          $msg.textContent = "";
+        }
+      });
+
+      const $txtInput = document.getElementById("txt");
+
+      $txtInput.addEventListener("keyup", (e) => {
+        const $show = document.querySelector(".show");
+        console.log(e);
+        
+        // 엔터를 쳤을 때
+        if (e.key === "Enter") {
+          $show.textContent = $txtInput.value;
+          $txtInput.value = '';
+        }
+      });
+    </script>
+  </body>
+</html>
