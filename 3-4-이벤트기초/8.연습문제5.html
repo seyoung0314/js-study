@@ -1,16 +1,39 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>실시간 글자 크기 조정</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>실시간 글자 크기 조정</title>
+  </head>
+  <body>
+    <input
+      type="text"
+      id="fontSizeInput"
+      placeholder="글자 크기를 픽셀 단위로 입력하세요"
+    />
+    <div id="content">여기 있는 텍스트의 크기를 조정해보세요!</div>
+    <div id="warning" style="color: red; display: none">
+      유효하지 않은 입력입니다! 숫자를 입력해주세요.
+    </div>
 
-  <input type="text" id="fontSizeInput" placeholder="글자 크기를 픽셀 단위로 입력하세요">
-  <div id="content">여기 있는 텍스트의 크기를 조정해보세요!</div>
-  <div id="warning" style="color: red; display: none;">유효하지 않은 입력입니다! 숫자를 입력해주세요.</div>
-  
+    <script>
+      const $fontSizeInput = document.getElementById("fontSizeInput");
+      const $content = document.getElementById("content");
+      const $warning = document.getElementById("warning");
 
-</body>
+      function changeFontSizeHandler() {
+        const fontSize = $fontSizeInput.value;
+        $content.style.fontSize = `${fontSize}px`;
+        
+        if (!Number(fontSize)) {
+          $content.style.fontSize = '0px';
+          $warning.style.display = 'block';
+        }else{
+          $warning.style.display = 'none';
+        }
+      }
+
+      $fontSizeInput.addEventListener("input",changeFontSizeHandler);
+    </script>
+  </body>
 </html>
