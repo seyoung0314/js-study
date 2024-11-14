@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .text-box {
+      width: 40%;
+      max-height: auto;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body>
+  <p class="text-box">
+    국가는 농·어민과 중소기업의 자조조직을 육성하여야 하며, 그 자율적 활동과 발전을 보장한다. 대통령은 법률에서 구체적으로 범위를 정하여 위임받은 사항과 법률을 집행하기 위하여 필요한 사항에 관하여 대통령령을 발할 수 있다. 국회의원은 그 지위를 남용하여 국가·공공단체 또는 기업체와의 계약이나 그 처분에 의하여 재산상의 권리·이익 또는 직위를 취득하거나 타인을 위하여 그 취득을 알선할 수 없다. 의원을 제명하려면 국회재적의원 3분의 2 이상의 찬성이 있어야 한다. 헌법재판소에서 법률의 위헌결정, 탄핵의 결정, 정당해산의 결정 또는 헌법소원에 관한 인용결정을 할 때에는 재판관 6인 이상의 찬성이 있어야 한다.
+
+    대통령은 내란 또는 외환의 죄를 범한 경우를 제외하고는 재직중 형사상의 소추를 받지 아니한다. 국가는 주택개발정책등을 통하여 모든 국민이 쾌적한 주거생활을 할 수 있도록 노력하여야 한다. 이 헌법시행 당시의 대법원장과 대법원판사가 아닌 법관은 제1항 단서의 규정에 불구하고 이 헌법에 의하여 임명된 것으로 본다. 국회에서 의결된 법률안은 정부에 이송되어 15일 이내에 대통령이 공포한다. 대통령은 국무회의의 의장이 되고, 국무총리는 부의장이 된다. 누구든지 체포 또는 구속을 당한 때에는 적부의 심사를 법원에 청구할 권리를 가진다. 근로조건의 기준은 인간의 존엄성을 보장하도록 법률로 정한다.
+
+    국회에 제출된 법률안 기타의 의안은 회기중에 의결되지 못한 이유로 폐기되지 아니한다. 다만, 국회의원의 임기가 만료된 때에는 그러하지 아니하다. 국회의원은 국회에서 직무상 행한 발언과 표결에 관하여 국회외에서 책임을 지지 아니한다. 국무위원은 국정에 관하여 대통령을 보좌하며, 국무회의의 구성원으로서 국정을 심의한다. 헌법개정안은 국회가 의결한 후 30일 이내에 국민투표에 붙여 국회의원선거권자 과반수의 투표와 투표자 과반수의 찬성을 얻어야 한다. 국가유공자·상이군경 및 전몰군경의 유가족은 법률이 정하는 바에 의하여 우선적으로 근로의 기회를 부여받는다. 대통령은 국가의 안위에 관계되는 중대한 교전상태에 있어서 국가를 보위하기 위하여 긴급한 조치가 필요하고 국회의 집회가 불가능한 때에 한하여 법률의 효력을 가지는 명령을 발할 수 있다.
+
+    대통령후보자가 1인일 때에는 그 득표수가 선거권자 총수의 3분의 1 이상이 아니면 대통령으로 당선될 수 없다. 이 헌법시행 당시에 이 헌법에 의하여 새로 설치될 기관의 권한에 속하는 직무를 행하고 있는 기관은 이 헌법에 의하여 새로운 기관이 설치될 때까지 존속하며 그 직무를 행한다. 이 헌법은 1988년 2월 25일부터 시행한다. 다만, 이 헌법을 시행하기 위하여 필요한 법률의 제정·개정과 이 헌법에 의한 대통령 및 국회의원의 선거 기타 이 헌법시행에 관한 준비는 이 헌법시행 전에 할 수 있다. 대통령은 국무총리·국무위원·행정각부의 장 기타 법률이 정하는 공사의 직을 겸할 수 없다. 원장은 국회의 동의를 얻어 대통령이 임명하고, 그 임기는 4년으로 하며, 1차에 한하여 중임할 수 있다.
+  </p>
+
+  <script>
+    const $textBox = document.querySelector('.text-box');
+
+    // 문자열을 각 문자들의 배열로 변환
+    const letterArray = [...$textBox.textContent];
+    
+    $textBox.innerHTML = ''; // 초기화
+
+    let index = -1; // 한글자 한글자의 인덱스
+    let isRendering = false; // 현재 화면에 텍스트를 그리고 있는지 여부
+    let intervalId;
+
+    const renderText = () => {
+      isRendering = true;
+
+      // 인터벌 시작
+      intervalId = setInterval(() => {
+        // 텍스트를 한 글자씩 추가하고 인덱스 증가
+        if (index < letterArray.length) {
+          $textBox.textContent += letterArray[index];
+          index++;
+
+          // 텍스트 박스의 현재 위치가 뷰포트 하단에 도달하면 멈추기
+          const { bottom } = $textBox.getBoundingClientRect();
+          if (bottom >= window.innerHeight) {
+            clearInterval(intervalId);
+            isRendering = false;
+          }
+        } else {
+          // 텍스트가 모두 렌더링되면 멈추기
+          clearInterval(interval);
+          isRendering = false;
+        }
+      }, 10); // 0.01초 간격으로 한 글자씩 추가
+    };
+
+      // 스로틀 함수 정의
+      const throttle = (func, delay) => {
+        let throttleTimeout = null;
+        return (...args) => {
+          if (!throttleTimeout) {
+            throttleTimeout = setTimeout(() => {
+              func(...args);
+              throttleTimeout = null;
+            }, delay);
+          }
+        };
+      };
+
+    // 스크롤 시 이벤트 핸들러
+    const scrollHandler = () => {
+      console.log('1');
+      
+      // 텍스트박스 최하단부 좌표 얻기
+      const { bottom } = $textBox.getBoundingClientRect();
+
+      if (
+        bottom <= window.innerHeight  // 박스 하단부 위치가 뷰포트 높이 이하이고
+        && !isRendering // 현재 렌더링중이 아니라면
+      ) {
+        renderText(); // 멈춘부분부터 추가 렌더링 시작
+      }
+    };
+
+    // 스크롤 이벤트 추가
+    window.addEventListener('scroll', throttle(scrollHandler,1000));
+
+    // 맨처음 초기 텍스트 렌더링
+    renderText();
+  </script>
+</body>
+</html>
