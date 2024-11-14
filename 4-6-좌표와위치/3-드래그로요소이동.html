@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>마우스 좌표 기반 위치 이동</title>
+  <style>
+    .box {
+      width: 100px;
+      height: 100px;
+      padding: 10px;
+      background-color: #007bff;
+      position: absolute;
+      top: 100px;
+      left: 100px;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box" id="box">박스</div>
+
+  <script>
+    const box = document.getElementById('box');
+    let isDragging = false;
+
+    box.addEventListener('mousedown', (event) => {
+      isDragging = true;
+    });
+
+    document.addEventListener('mousemove', (event) => {
+      console.log(`x: ${event.clientX}, y: ${event.clientY}`);
+      console.log(`w: ${box.offsetWidth}, h: ${box.offsetHeight}`);
+      if (isDragging) {
+        
+        // offset 은 보더, 패딩, 스크롤바크기가 포함된값(마진포함 x)
+        // 마우스 포인터 정중앙에 박스를 놓기위함
+        box.style.left = `${event.clientX - box.offsetWidth / 2}px`;
+        box.style.top = `${event.clientY - box.offsetHeight / 2}px`;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+  </script>
+
+</body>
+</html>
