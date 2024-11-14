@@ -17,7 +17,6 @@ const todos = [
   },
 ];
 
-
 const $inputText = document.getElementById("todo-text");
 const $removeBtn = document.getElementById("remove");
 const $todoList = document.querySelector(".todo-list");
@@ -84,9 +83,15 @@ function insertListItem(e) {
 
 // 체크박스 선택 시
 function selectedItem(e) {
-  if (e.target.closest(".remove") ||e.target.closest(".modify")) {
+  console.log(e.target.classList);
+
+  if (e.target.closest(".remove") || e.target.closest(".modify")) {
     return;
   }
+  if (e.target.matches(".modify-input")) {
+    return;
+  }
+
   const selectedId = e.target.closest(".todo-list-item").dataset.id;
   console.log(e.target.closest(".todo-list-item").dataset.id);
   todos.forEach((todo) => {
@@ -108,43 +113,87 @@ function removeItem(e) {
     if (String(todo.id) === selectedId) {
       todos.splice(index, 1);
     }
-    console.log(todos);
+    console.log(`remove`, todos);
     addTodo();
   });
 }
 
-
 let modifyFlag;
-// 리스트 내용 수정
+// 리스트 내용 수정버튼
 function modifyList(e) {
   e.stopPropagation();
 
-  if(modifyFlag){
-    addTodo();
-    modifyFlag = false;
+  if (!e.target.matches(".lnr-undo")) {
     return;
   }
-  if (!e.target.closest(".modify")) {
-    return;
-  }
-  modifyFlag = true;
-  const $label = e.target.closest(".todo-list-item").querySelector(".checkbox");
-  const $span = $label.querySelector(".text");
-  const oldText = $span.textContent;
+    if (modifyFlag) {
+      addTodo();
+      modifyFlag = false;
+      return;
+    }
+    console.log(`modi target`,e.target);
 
-  console.log(`oldText : ${oldText}`);
+    modifyFlag = true;
+    const $label = e.target
+      .closest(".todo-list-item")
+      .querySelector(".checkbox");
+    const $span = $label.querySelector(".text");
+    const oldText = $span.textContent;
 
-  const $newInput = document.createElement("input");
-  $newInput.type = "text";
-  $newInput.value = oldText;
-  $newInput.classList.add('modify-input');
+    console.log(`oldText : ${oldText}`);
 
-  $label.replaceChild($newInput, $span);
+    const $newInput = document.createElement("input");
+    $newInput.value = oldText;
+    $newInput.classList.add("modify-input");
+    $newInput.classList.add("text");
 
+    $label.replaceChild($newInput, $span);
+    
+
+}
+
+function changeModicon(e){
   
+  if(e.target.matches(".lnr-undo")){
+    console.log(`1111`);
+    e.target.classList.replace('lnr-undo','lnr-checkmark-circle');
+
+    modifyList(e);
+  }else if(modifyFlag){
+    console.log(`1111111111`);
+    e.target.classList.replace('lnr-checkmark-circle','lnr-undo');
+    modifyFlag = false;
+    modifyList(e);
+  }
+}
+
+// 리스트 내용 수정
+function modifyItem(e) {
+  let newTodo;
+  let target;
+  if ((e.key === "Enter" && e.target.matches(".modify-input"))) {
+    newTodo = e.target.value; 
+    target = e.target;
+  }
+  if(e.target.matches(".lnr-cross-circle")){
+    newTodo = e.target.closest(".todo-list-item").querySelector('.checkbox span');
+    target = e.target;
+ }
+    const modifiedId = e.target.closest(".todo-list-item").dataset.id;
+    todos.forEach((todo) => {
+      if (String(todo.id) === modifiedId) {
+        todo.text = newTodo;
+        changeModicon(target)
+      }
+      modifyFlag = false;
+      
+      addTodo();
+    });
 }
 
 $insertForm.addEventListener("submit", insertListItem);
 $todoList.addEventListener("click", selectedItem);
 $todoList.addEventListener("click", removeItem);
 $todoList.addEventListener("click", modifyList);
+$todoList.addEventListener("click", changeModicon);
+$todoList.addEventListener("keydown", modifyItem);
