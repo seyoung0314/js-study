@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .title-wrap {
+        display: flex;
+        justify-content: center;
+        margin: auto;
+      }
+      #view {
+        margin: 10px;
+        font-size: 30px;
+        font-weight: 700;
+      }
+      #image {
+        width: 200px;
+        height: 200px;
+      }
+      #image-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        width: 100%;
+        justify-content: center;
+        margin: auto;
+      }
+      .name {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="title-wrap">
+      <div id="view">포켓몬 도감</div>
+    </div>
+    <div id="image-wrap"></div>
+    <script>
+      const $imgewrap = document.getElementById("image-wrap");
+
+      let offset = 0;
+      let poketArray = [];
+      let poketmons = [];
+
+      // 스로틀 함수 정의
+      const throttle = (func, delay) => {
+        let throttleTimeout = null;
+        return (...args) => {
+          if (!throttleTimeout) {
+            throttleTimeout = setTimeout(() => {
+              func(...args);
+              throttleTimeout = null;
+            }, delay);
+          }
+        };
+      };
+
+      //스크롤 이벤트 핸들러
+      function scrollHandler(e) {
+        //스크롤이 최하단으로 갔다는 것을 감지
+        // 1.스크롤의 y축위치
+        const scrollTop = window.scrollY;
+
+        // 2.뷰포트 높이 (현재 브라우저에서 보이는 높이)
+        const windowHeight = window.innerHeight;
+
+        // 3. 문서 전체의 높이 (보이지 않는 부분까지 포함)
+        const documentHeight = document.body.offsetHeight;
+
+        // 페이지 스크롤이 하단에 가까워졌을 때 새로운 컨텐츠 로딩
+        if (scrollTop + windowHeight >= documentHeight ) {
+          offset += 50;
+          getPokemon();
+        }
+      }
+      getPokemon();
+
+      function getPokemon() {
+        console.log(`======`);
+        console.log("offset", offset);
+
+        fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`)
+          .then((res) => res.json())
+          .then((res) => {
+            return res.results;
+          })
+          .then((res) => {
+            for (const poketmon of res) {
+              poketArray.push(poketmon.url);
+              // console.log(poketmon);
+            }
+            // console.log(`1111111`,poketArray.length);
+            return getPoketmonRend(poketArray);
+          });
+      }
+      console.log("poketArray", poketArray);
+
+      function getPoketmonRend(poketArray) {
+        console.log(`======`);
+        console.log("offset", offset);
+
+        fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=50`)
+          .then((res) => res.json())
+          .then((res) => {
+            return res.results;
+          })
+          .then((res) => {
+            const promises = res.map((poketmon) => {
+              poketArray.push(poketmon.url); // URL 저장
+              return fetch(poketmon.url) // 각 포켓몬의 상세 정보를 fetch
+                .then((res) => res.json())
+                .then((res) => {
+                  poketmons.push({
+                    name: res.species.name,
+                    imageUrl: res.sprites.front_default,
+                    height: res.height,
+                    weight: res.weight,
+                    xp: res.base_experience,
+                    type: res.types,
+                  });
+                });
+            });
+
+            // 모든 포켓몬의 데이터를 다 받아온 후, 이미지를 렌더링
+            Promise.all(promises).then(() => {
+              makeImage(poketmons);
+            });
+          });
+      }
+
+      //포켓몬 이미지 상자만들기
+      function makeImage(poketmons) {
+        for (const poketmon of poketmons) {
+
+          const name = poketmon.name;
+          const imageUrl = poketmon.imageUrl;
+
+          const $imagebox = document.createElement("div");
+          $imagebox.id = "imagebox";
+
+          const $img = document.createElement("img");
+          $img.src = imageUrl;
+          $img.id = `image-${name}`;
+
+          const $name = document.createElement("div");
+          $name.classList.add("name");
+          $name.textContent = name;
+          $name.id = `name-${name}`;
+
+          $imagebox.appendChild($img);
+          $imagebox.appendChild($name);
+
+          $imgewrap.appendChild($imagebox);
+        }
+      }
+
+      //이미지 변경하는 함수
+      function modifyImage(imageUrl, name) {
+        console.log("count", countName);
+
+        const $modiImage = document.getElementById(`image${countName}`);
+        $modiImage.setAttribute("src", imageUrl);
+        const $modiName = document.getElementById(`name${countName}`);
+        $modiName.textContent = name;
+        console.log("codddddunt", countName);
+        countName++;
+      }
+
+      window.addEventListener("scroll", throttle(scrollHandler, 2000));
+    </script>
+  </body>
+</html>

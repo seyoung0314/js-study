@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .button-wrap {
+        display: flex;
+        justify-content: center;
+        margin: auto;
+      }
+      button {
+        margin: 10px;
+      }
+      #image {
+        width: 200px;
+        height: 200px;
+      }
+      #image-wrap {
+        display: flex;
+        flex-wrap: wrap;
+        width: 50%;
+        justify-content: center;
+        margin: auto;
+      }
+      .name {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="button-wrap">
+      <button id="view">포켓몬 가져오기</button>
+      <button id="prev">이전</button>
+      <button id="next">다음</button>
+    </div>
+    <div id="image-wrap"></div>
+    <script>
+      const $viewBtn = document.getElementById("view");
+      const $prevBtn = document.getElementById("prev");
+      const $nextBtn = document.getElementById("next");
+      const $imgewrap = document.getElementById("image-wrap");
+
+      let offset = 0;
+      let poketArray = [];
+
+      function getPokemon() {
+        console.log(`======`);
+
+        init();
+        fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=20`)
+          .then((res) => res.json())
+          .then((res) => {
+            return res.results;
+          })
+          .then((res) => {
+            for (const poketmon of res) {
+              poketArray.pusah({
+                name: poketmon.name,
+                url: poketmon.url,
+              });
+              console.log(poketmon);
+            }
+            return getPoketmonRend(poketArray);
+          });
+      }
+      console.log("poketArray", poketArray);
+
+      function getPoketmonRend(poketArray) {
+        for (const poketmon of poketArray) {
+          fetch(poketmon.url)
+            .then((res) => res.json())
+            .then((res) => {
+              const imageUrl = res.sprites.front_default;
+              const poketmonName = res.species.name;
+              makeImage(imageUrl, poketmonName);
+            });
+        }
+      }
+
+      //포켓몬 이미지 상자만들기
+      function makeImage(imageUrl, name) {
+
+        const $imagebox = document.createElement("div");
+        $imagebox.id = "imagebox";
+
+        const $img = document.createElement("img");
+        $img.src = imageUrl;
+        $img.id = `image-${name}`;
+
+        const $name = document.createElement("div");
+        $name.classList.add("name");
+        $name.textContent = name;
+        $name.id = `name-${name}`;
+
+        $imagebox.appendChild($img);
+        $imagebox.appendChild($name);
+
+        $imgewrap.appendChild($imagebox);
+      }
+
+      //이미지 변경하는 함수
+      function modifyImage(imageUrl, name) {
+        console.log('count',countName);
+        
+        const $modiImage = document.getElementById(`image${countName}`);
+        $modiImage.setAttribute("src", imageUrl);
+        const $modiName = document.getElementById(`name${countName}`);
+        $modiName.textContent = name;
+        console.log('codddddunt',countName);
+        countName++;
+      }
+
+      function init(){
+        poketArray =[];
+        $imgewrap.innerHTML="";
+      }
+
+      $viewBtn.addEventListener("click", (e) => {
+        offset = 0;
+        getPokemon();
+      });
+      $prevBtn.addEventListener("click", (e) => {
+        if (offset === 0) {
+          return;
+        }
+        offset -= 20;
+        getPokemon();
+      });
+      $nextBtn.addEventListener("click", (e) => {
+        offset += 20;
+        getPokemon();
+      });
+    </script>
+  </body>
+</html>

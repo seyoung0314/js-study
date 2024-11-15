@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="fetchData">버튼</button>
+
+    <script>
+      const serverUrl = `https://jsonplaceholder.typicode.com`;
+
+      const $fetchBtn = document.getElementById("fetchData");
+
+      //서버통신 함수 - promise
+      function get(url, callbackFn) {
+        return new Promise((resolve, reject) => {
+          const xhr = new XMLHttpRequest();
+          xhr.open("GET", `${url}`);
+          xhr.send();
+          xhr.addEventListener("load", (e) => {
+            const responseData = JSON.parse(xhr.responseText);
+            resolve(responseData);
+          });
+        });
+      }
+
+      $fetchBtn.addEventListener("click", (e) => {
+        //1.회원정보를 전체 조회한다.
+        const Promise1 = get(`${serverUrl}/users`);
+        console.log('Promise1',Promise1);
+        
+        //2.그중에 id가 2인 회원의 게시물정보를 조회한다.
+        const Promise2 = Promise1.then((Response) => {
+          console.log('Promise2',Response);
+          const foundUesr = Response.find((user) => {
+            return user.id === 2;
+          });
+
+          const userId = foundUesr.id;
+          return get(`${serverUrl}/posts?userId=${userId}`);
+        });
+
+        //3.그 회원이 쓴 첫번째 게시물의 댓글 목록을 조회한다.
+        const Promise3 = Promise2.then((Response) => {
+          return get(`${serverUrl}/posts/${Response[0].id}`);
+        });
+        
+        Promise3.then((result) => {
+          console.log('Promise3',result);
+        });
+      });
+    </script>
+  </body>
+</html>

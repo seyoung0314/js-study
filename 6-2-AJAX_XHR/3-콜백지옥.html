@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="fetchData">버튼</button>
+
+    <script>
+      const serverUrl = `https://jsonplaceholder.typicode.com`;
+
+      const $fetchBtn = document.getElementById("fetchData");
+
+      //서버통신 함수
+      function get(url, callbackFn) {
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", `${url}`);
+        xhr.send();
+        xhr.addEventListener("load", (e) => {
+          const responseData = JSON.parse(xhr.responseText);
+          console.log(`ok------------`);
+          console.log(responseData);
+          callbackFn(responseData);
+        });
+      }
+
+      $fetchBtn.addEventListener("click", (e) => {
+        //1.회원정보를 전체 조회한다.
+
+        get(`${serverUrl}/users`, (res) => {
+          console.log("1.회원정보를 전체 조회한다.");
+          const foundUser = res.find((user) => user.id === 2);
+          console.log(foundUser);
+
+          //2.그중에 id가 2인 회원의 게시물정보를 조회한다.
+          get(`${serverUrl}/posts?userId=${foundUser.id}`, (res) => {
+            console.log("2.그중에 id가 2인 회원의 게시물정보를 조회한다.");
+
+            //3.그 회원이 쓴 첫번째 게시물의 댓글 목록을 조회한다.
+            const postId = res[0].id;
+            get(`${serverUrl}/posts/${postId}/comments`, (res) => {
+              console.log(`3.그 회원이 쓴 첫번째 게시물의 댓글 목록을 조회한다.`);
+              console.log(res);
+            });
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
