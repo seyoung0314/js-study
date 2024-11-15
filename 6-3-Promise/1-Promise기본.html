@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    //실제 작업 실행기
+    const executor = (resolve,reject)=>{
+      const isSuccess = true;
+      if(isSuccess){
+        resolve({
+          message : '성공',
+          Number : 2,
+          arry : [1,2,3],
+        });  //성공 시 실행할 콜백
+      }else reject('실패'); //실패 시 실행할 콜백
+    };
+
+    //비동기 작업
+    const myPromise1 = new Promise(executor);
+
+    console.log('1' ,myPromise1);
+
+    //promise 체인
+    //then() : 프로미스가 fullfiled 시 실행할 내용
+    const myPromise2 = myPromise1.then((result)=>{
+      console.log('success',result);
+      const msg = result.message;
+      return new Promise((resolve,reject)=>{
+        resolve(msg);
+      });
+    });
+    console.log(`2`,myPromise2);
+
+    const myPromise3 = myPromise2.then(result=>{
+      const moreMessage = result +'세번째 프로미스';
+      return new Promise((resolve,reject)=>{
+        resolve(moreMessage);
+      })
+    });
+    console.log('3',myPromise3);
+    
+    
+    
+  </script>
+</body>
+</html>
