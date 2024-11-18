@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+      }
+      h3{
+        margin-bottom: 0;
+      }
+      .pokemon-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-top: 20px;
+      }
+      .pokemon {
+        width: 150px;
+        margin: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+      }
+      .pokemon img {
+        width: 100px;
+        height: 100px;
+      }
+      .loading {
+        margin: 20px;
+        font-size: 18px;
+        color: #666;
+      }
+      #modal {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+        padding: 20px;
+        display: none;
+        z-index: 1000;
+        text-align: left;
+      }
+      #modal h2 {
+        margin-top: 0;
+      }
+      #overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: none;
+        z-index: 999;
+      }
+      .type-image {
+        width: 40px;
+        margin-right: 5px;
+      }
+      .type-box {
+        display: flex;
+        align-items: center;
+      }
+      .type-box strong {
+        flex: 1;
+      }
+      .type-box ul {
+        flex: 7;
+        list-style: none;
+        display: flex;
+        padding-left: 10px;
+        margin: 0;
+      }
+      .type-box ul li {
+        margin-right: 10px;
+        width: 10%;
+      }
+      .type-box ul li img {
+        width: 100%;
+      }
+      .damage-relations strong{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        margin-bottom: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- <button id="prev">이전</button>
+    <button id="next">다음</button> -->
+
+    <h1>포켓몬 도감</h1>
+    <div class="pokemon-container" id="pokemonContainer"></div>
+    <div class="loading" id="loading">로딩 중...</div>
+
+    <!-- 모달 -->
+    <div id="overlay"></div>
+    <div id="modal">
+      <h2 id="modalTitle">포켓몬 정보</h2>
+      <img
+        id="modalImage"
+        src=""
+        alt="포켓몬 이미지"
+        style="width: 150px; height: 150px"
+      />
+      <p id="modalDetails"></p>
+      <div class="type-box">
+        <strong>타입: </strong>
+        <ul id="modalTypes"></ul>
+      </div>
+
+      <div class="damage-relations">
+        <h3>데미지 관계</h3>
+        <p><strong>더블 데미지:</strong> <span id="doubleDamage"></span></p>
+        <p><strong>반감 데미지:</strong> <span id="halfDamage"></span></p>
+        <p><strong>노 데미지:</strong> <span id="noDamage"></span></p>
+      </div>
+      <button id="closeModal">닫기</button>
+    </div>
+
+    <script>
+      const typeImages = [
+        {
+          name: "normal",
+          url: "https://i.namu.wiki/i/mL_g1HwLpYv9A8uBqCYAYLQMvCzy32woZ-EvZyhObgZSM8v-YQFnaKvatGfEexRvMbs0NAqs4I7l_ryEKXn8kQ.svg",
+        },
+        {
+          name: "fighting",
+          url: "https://i.namu.wiki/i/TkfjFTwiz_NTJ1lMdOWYEWLhMa-QIyololSLydMg3rksISEcrpjISXASRwCV_9MmyysCzfJbtM3ITrr19QdU9w.svg",
+        },
+        {
+          name: "flying",
+          url: "https://i.namu.wiki/i/tM0CKMxWkTXrw7dG7tAqYYEhiwQvaw_GXb6a4M8poekIHLFmI4MTRCnFtQZ1CgcYPBBvWhoORnI8b8KWM4YrwA.svg",
+        },
+        {
+          name: "poison",
+          url: "https://i.namu.wiki/i/9-rMJhXmWfHW2uH5G6dLk_Nu0jM7G5D3mEwYLS_-kP4pFG7XAAjgGW5lIkeyQuOpXen3j56sAToj8xdD5KT5LA.svg",
+        },
+        {
+          name: "ground",
+          url: "https://i.namu.wiki/i/aqOvaTcNZ28gZ3vIoimH2TPkV_OdYxEKRM0wfEtNLtmX5B5ulVx9plUFLuP8oRS_78bOqLdlvjO1JSmTuziZng.svg",
+        },
+        {
+          name: "rock",
+          url: "https://i.namu.wiki/i/DZdLDqiKkwQevf7OSsEeoY7p93riiCtX4zU-DExeA6b7impyofyeqXrlDyyJ5xqXLhI5GOkrMGvkV2TX8Cqgkg.svg",
+        },
+        {
+          name: "bug",
+          url: "https://i.namu.wiki/i/rYqjbE0d2NKh0tL3HRwPHJYlHSlbucwWvC0dbR98FgCt_VqltBFEzQwJoE7IePqtcXRA5QlOAjXbu-Mk-f6sgg.svg",
+        },
+        {
+          name: "ghost",
+          url: "https://i.namu.wiki/i/Gf1HqRI7l8UXzVN7zzZg_jC8sv2zqYfj-QWcPfautl5MWS8Mm4BuATTLnG7VRkZaDAhAOXlb5H-OCACnq2KAJw.svg",
+        },
+        {
+          name: "steel",
+          url: "https://i.namu.wiki/i/nRpmOJ0mrOUWbTzyJZChhUEVOagj0NXWedH2vKB32pGHOh_4UY-dwmcVcEOKxVFlOBzQotiojUktqI6KJ5IhGA.svg",
+        },
+        {
+          name: "fire",
+          url: "https://i.namu.wiki/i/ltGcTrYOPlCs7vdkG48EwxzKgNDLBT13k_jJJz8tcgwpQaySZ8iUSwFAB0ZXIMXgOn1v4LqeGynP_W4-PiPdVg.svg",
+        },
+        {
+          name: "water",
+          url: "https://i.namu.wiki/i/BVGUfkwBub9onsXLW2c4GBbuStecPs1Dn05vAWIVK-OAT2yOWXCS1hcjIdCpQqS2rdf9i-Hc_bjF7eHjo6swwA.svg",
+        },
+        {
+          name: "grass",
+          url: "https://i.namu.wiki/i/JQzfsUOPP6lH7-WZjfiXmPNYkts0Vkk0ZkaptdBduZjHANSoEvIDzHF-czPkhSWu1Legq4reVWQwHIqbg52DWw.svg",
+        },
+        {
+          name: "electric",
+          url: "https://i.namu.wiki/i/f7e74r2sQFAmbwSvL0zVNxVptH67fbU2nwIgti9JufXvzk7Q6aVXQ-nqEdfZQEsnCQGWVlK6R0NCQQgIQeyIRoT5mOQ0e8pFdK67uZwQXQq3tQn4iBzg6BZyfNuxIaPYM8Fb2SnMQj_GWOo-fWkVvg.svg",
+        },
+        {
+          name: "psychic",
+          url: "https://i.namu.wiki/i/cL9D3IoqoDPFuc8qLfNtsd8o9KK-jz0Rkp4kSWiTamj3if3jMLrxoWiUxpjpnac4gmzYESSWvSRiPBIic9fQow.svg",
+        },
+        {
+          name: "ice",
+          url: "https://i.namu.wiki/i/Y0DFJyYI1j2US1NlAbLb_G0DPvEiEqSoeSZo3hKFuXvbcnA_vAL6wANAIjHfpdLVd3f3YupYhzFElx_LM0M5mA.svg",
+        },
+        {
+          name: "dragon",
+          url: "https://i.namu.wiki/i/JIFIsuyLyxNaVEEcxmjCQo-pDvkXBkk1-z6JD42SeGj8ZwyIBEhuq3LzAFrPl7kllYjcOyzvRMHeXyd_FR05QA.svg",
+        },
+        {
+          name: "dark",
+          url: "https://i.namu.wiki/i/bOfsUiB8RinVwMA2lWqLZoe7aTPc3FSXfLmi1iCieAfnkXddB47FKjGLX4x5FPlaN6leg2AdmTc4QpYJAJnMEw.svg",
+        },
+        {
+          name: "fairy",
+          url: "https://i.namu.wiki/i/OOb5mGIvo6mxXH7Zi7RofROyUruFhGftcbgxcuiKCTmM_9dQJp-3z3FSJRg_Ckk2hwf2Vl7jCQ3ohVmPT5iTQg.svg",
+        },
+        {
+          name: "stellar",
+          url: "https://i.namu.wiki/i/NV3z2Ey12y9COhiBIo8afrOYk3Hd7TpSOPNzZx0kn93wUkgiOz003yNw4kwTABg2mL54WNebR50m2UxdHIih4A.webp",
+        },
+      ];
+
+      // const $prev = document.getElementById("prev");
+      // const $next = document.getElementById("next");
+      const $loading = document.getElementById("loading");
+      const $pokeContainer = document.getElementById("pokemonContainer");
+
+      //modal
+      const $overlay = document.getElementById("overlay");
+      const $modal = document.getElementById("modal");
+      const $closeModalBtn = document.getElementById("closeModal");
+      const $modalImage = document.getElementById("modalImage");
+      const $modalDetail = document.getElementById("modalDetails");
+      const $modalTypes = document.getElementById("modalTypes");
+
+      const $doubleDamage = document.getElementById("doubleDamage");
+      const $halfDamage = document.getElementById("halfDamage");
+      const $noDamage = document.getElementById("noDamage");
+
+      const pokeUrl = "https://pokeapi.co/api/v2/pokemon";
+      let offset = 0; // 시작위치
+      let limit = 45; // 데이터 갯수
+      let isLoading = false; // 로딩 상태 플래그
+      let count = 0;
+
+      //모달 열기
+      function openModal() {
+        $overlay.style.display = "block";
+        $modal.style.display = "block";
+      }
+      //모달 닫기
+      function closeModal() {
+        $overlay.style.display = "none";
+        $modal.style.display = "none";
+      }
+      $closeModalBtn.addEventListener("click", (e) => {
+        closeModal();
+      });
+
+      $overlay.addEventListener("click", (e) => {
+        closeModal();
+      });
+      //포켓몬 상세보기 클릭 이벤트
+      $pokeContainer.addEventListener("click", async (e) => {
+        const $pokeDiv = e.target.closest(".pokemon");
+        const $pokeImage = $pokeDiv.querySelector("img");
+        const res = await fetch(`${pokeUrl}/${$pokeImage.alt}`);
+
+        const { height, weight, base_experience, types } = await res.json();
+
+        if (!$pokeDiv) return;
+
+        $modalImage.src = $pokeImage.src;
+        $modalDetail.textContent = `키: ${height} | 무게: ${weight} | 경험치: ${base_experience}`;
+
+        // 모달 타입들 넣기
+        const typeNames = types.map((typeInfo) => ({
+          name: typeInfo.type.name,
+          url: typeInfo.type.url,
+        }));
+
+        $modalTypes.innerHTML = "";
+
+        typeNames.forEach((tName) => {
+          console.log(tName);
+
+          const { url: typeUrl } = typeImages.find(
+            (obj) => obj.name === tName.name
+          );
+
+          const $li = document.createElement("li");
+          $li.innerHTML = `
+          <img src="${typeUrl}" alt="${tName.name}" title=${tName.name}>
+        `;
+          $modalTypes.append($li);
+
+          //타입 상관관계 데이터 가져오기
+          fetchType(tName.url);
+
+          //모달 열기
+          openModal();
+        });
+      });
+
+      function changeTypeImg(Arr,element) {
+        $damage = element;
+        $damage.innerHTML="";
+        Arr.forEach((dName) => {
+          const imgSrc = typeImages.find((obj) => (obj.name === dName)).url;
+          $damage.innerHTML += `<img class="type-image"
+          src="${imgSrc}">`;
+        });
+      }
+
+      const fetchType = async (url) => {
+        console.log(url);
+
+        const res = await fetch(url);
+        const { damage_relations } = await res.json();
+        const { double_damage_from, half_damage_from, no_damage_from } =
+          damage_relations;
+        const doubleArr = double_damage_from.map((obj) => obj.name);
+        const halfArr = half_damage_from.map((obj) => obj.name);
+        const noArr = no_damage_from.map((obj) => obj.name);
+
+        changeTypeImg(doubleArr,$doubleDamage);
+        changeTypeImg(halfArr,$halfDamage);
+        changeTypeImg(noArr,$noDamage);
+      };
+      // $prev.addEventListener("click", (e) => {
+      //   if (offset === 0) {
+      //     $pokeContainer.textContent = "이전 데이터가 없습니다.";
+      //     return;
+      //   }
+      //   $pokeContainer.innerHTML = "";
+      //   getPokemon();
+      //   offset -= limit;
+      // });
+      // $next.addEventListener("click", (e) => {
+      //   $pokeContainer.textContent = "다음 데이터가 없습니다.";
+      //   $pokeContainer.innerHTML = "";
+      //   getPokemon();
+      //   offset += limit;
+      // });
+
+      // 포켓몬 api 통신
+      async function getPokemon() {
+        if (isLoading) return;
+        //로딩 바 제어
+        isLoading = true;
+        $loading.style.opacity = "1";
+
+        setTimeout(async () => {
+          // 포켓몬 목록정보 가져오기 요청
+          const res = await fetch(`${pokeUrl}?offset=${offset}&limit=${limit}`);
+          const { results, counts: pokeCount } = await res.json();
+          count = pokeCount;
+
+          //forEach는 비동기
+          //for..of는 동기
+          for (const pokemon of results) {
+            // 가져온 포켓몬들의 상세정보를 서버에 요청
+            const res = await fetch(pokemon.url);
+            const { sprites } = await res.json();
+            const imgSrc = sprites.front_default;
+
+            const $div = document.createElement("div");
+            $div.classList.add("pokemon");
+            $div.innerHTML = `
+          <img src="${imgSrc}" alt=${pokemon.name}>
+          <h3>${pokemon.name}</h3>
+          `;
+
+            $pokeContainer.append($div);
+          }
+
+          isLoading = false;
+          $loading.style.opacity = "0";
+        }, 1100);
+      }
+
+      //무한 스크롤을 위한 옵저버 설정
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting && !isLoading) {
+            offset += limit;
+            if (offset > count) {
+              $pokeContainer.innerHTML +=
+                "<p>더 이상 가져올 포켓몬이 없습니다.</p>";
+              return;
+            }
+            getPokemon();
+          }
+        },
+        { threshold: 0.5 }
+      );
+      observer.observe($loading);
+
+      getPokemon();
+    </script>
+  </body>
+</html>
