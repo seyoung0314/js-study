@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="fetchData">회원정보 불러오기</button>
+
+    <script>
+      const $fetchBtn = document.getElementById("fetchData");
+      const url = `https://jsonplaceholder.typicode.com/users`;
+
+      function fetchGet() {
+        fetch(url)
+          .then((res) => res.json())
+          // .then(res=>res)
+          .then((res) => {
+            console.log(res);
+          });
+      }
+
+      //async와 await를 통한 서버통신
+
+      // async function fetchAsync(){
+      //   //promise가 리턴되는 함수 앞에 await를 붙이면
+      //   // then 처리를 대신해줌
+      //   const res = await fetch(url);
+      //   console.log(res);
+
+      //   const result = await res.json();
+      //   console.log(result);
+
+      // }
+
+      const fetchAsync = async () => {
+        const res = await fetch(url);
+        const result = await res.json();
+      };
+
+      $fetchBtn.addEventListener("click", (e) => {
+        // fetchGet();
+        fetchAsync();
+      });
+    </script>
+  </body>
+</html>
