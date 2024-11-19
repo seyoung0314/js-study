@@ -5,11 +5,19 @@ const $sortDownloadBtn = document.getElementById("s_rate");
 const $sortYearBtn = document.getElementById("s_year");
 const $sortLikeBtn = document.getElementById("s_like");
 
+//모달 DOM
+const myModal = new bootstrap.Modal(document.getElementById("detailModal"));
+const $modalTitle = document.getElementById("exampleModalLabel");
+const $modalImage = document.querySelector(".desc-image");
+const $modalDesc = document.querySelector(".movie-description");
+
 const $load = document.getElementById("loading");
 
+//정렬을 위한 세부주소
 const sortDownload = "sort_by=download_count&order_by=desc";
 const sortLike = "sort_by=like_count&order_by=desc";
 const sortYear = "sort_by=year&order_by=desc";
+
 let pageCount = 0;
 let isLoading = false;
 let sortOption;
@@ -32,11 +40,13 @@ async function getMoviesData(option) {
 function rendMoviesList(movies) {
   setTimeout(() => {
     for (const movie of movies) {
-      const movieImage = movie.large_cover_image;
-      const movieTitle = movie.title;
-      const movieYear = movie.year;
-      const movieRating = movie.rating;
-      const movieId = movie.id;
+      const {
+        large_cover_image: movieImage,
+        title: movieTitle,
+        year: movieYear,
+        rating: movieRating,
+        id: movieId,
+      } = movie;
 
       const $newDiv = document.createElement("div");
       $newDiv.classList.add("movie");
@@ -57,29 +67,25 @@ function rendMoviesList(movies) {
 
 // 모달 팝업에 데이터 넣기
 async function modalData(id) {
-  const myModal = new bootstrap.Modal(document.getElementById("detailModal"));
-  const $modalTitle = document.getElementById("exampleModalLabel");
-  const $modalImage = document.querySelector(".desc-image");
-  const $modalDesc = document.querySelector(".movie-description");
-  // myModal.show();
 
   // 영화의 id를 가지고 검색
   const res = await fetch(
     `https://yts.mx/api/v2/movie_details.json?movie_id=${id}`
   );
   const result = await res.json();
-  const movieDetail = result.data.movie.description_full;
-  const movieTitle = result.data.movie.title;
-  const movieImage = result.data.movie.large_cover_image;
+  const {
+    description_full: movieDetail,
+    title: movieTitle,
+    medium_cover_image: movieImage,
+  } = result.data.movie;
 
   $modalTitle.textContent = movieTitle;
   $modalImage.setAttribute("src", movieImage);
-  $modalDesc.textContent = movieDetail;
-
+  $modalDesc.textContent = movieDetail || 'Details unavailable.';
   myModal.show();
 }
 
-function init(option){
+function init(option) {
   $movieList.innerHTML = "";
   pageCount = 1;
   sortOption = option;
@@ -88,9 +94,9 @@ function init(option){
 
 const observer = new IntersectionObserver(
   (entries) => {
-    console.log('ddddd',entries[0]);
+    console.log("ddddd", entries[0]);
     if (entries[0].isIntersecting && !isLoading) {
-      console.log("ddddddddd");  
+      console.log("ddddddddd");
       getMoviesData(sortOption);
       pageCount++;
     }
